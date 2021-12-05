@@ -18,7 +18,8 @@ pub fn test_generic() {
     let mut some_value = 0;
 
     // Our listener
-    let mut listener = |event, _current| {
+
+    channel.recieve(|event, _current| {
         match event {
             Event::HelloWorld => {
                 some_value += 1;
@@ -29,9 +30,7 @@ pub fn test_generic() {
             }
             Event::GoodbyeWorld => Some(EventResult::Incomplete),
         }
-    };
-
-    channel.recieve(&mut listener);
+    });
 
     // lets emit 12 times
     for _ in 0..12 {
