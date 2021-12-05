@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use events::Channel;
+use netrex_events::Channel;
 
 #[test]
 pub fn test_threads() {
