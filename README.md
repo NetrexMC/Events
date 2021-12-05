@@ -1,22 +1,42 @@
-# Events
+# netrex_events
 A unconvential way to handle events with rust
 
-Proposal API:
+API:
 ```rust
+#[derive(Clone)]
+enum Event {
+    HelloWorld,
+    GoodbyeWorld,
+}
+
 #[derive(Debug, Clone)]
-pub struct EmittingData;
+enum EventResult {
+    Complete,
+    Incomplete,
+}
 
-impl Send for EmittingData {}
+let channel = Channel::<Event, EventResult>::new();
+let mut some_value = 0;
 
-// create an event channel.
-let channel = EventChannel::new<EmittingData>("name", EmittingData::default());
-let result = channel.recieve(|data: &mut EmittingData| -> ReceivingData {
-    // return data to return to the emitter.
-    RecievingData::new()
-});
+// Our listener
+let mut listener = |event, _current| {
+    match event {
+        Event::HelloWorld => {
+            some_value += 1;
+            if some_value == 3 {
+                return Some(EventResult::Incomplete);
+            }
+            Some(EventResult::Complete)
+        }
+        Event::GoodbyeWorld => Some(EventResult::Incomplete),
+    }
+};
 
-// on another thread
-thread::spawn(move || {
-    let result = channel.send(EmittingData {}).unwrap();
-})
+channel.recieve(&mut listener);
+
+// lets emit 12 times
+for _ in 0..12 {
+    let result = channel.send(Event::HelloWorld);
+    dbg!(result);
+}
 ```
