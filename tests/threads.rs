@@ -37,11 +37,13 @@ pub fn test_threads() {
 
     let a = Arc::new(channel);
 
-    std::thread::spawn(move || {
-        // lets emit 12 times
-        for _ in 0..12 {
-            let result = a.send(Event::HelloWorld);
-            dbg!(result);
-        }
-    }).join().unwrap();
+    crossbeam::scope(|scope| {
+        scope.spawn(|_| {
+            // lets emit 12 times
+            for _ in 0..12 {
+                let result = a.send(Event::HelloWorld);
+                dbg!(result);
+            }
+        });
+    }).unwrap();
 }

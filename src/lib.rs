@@ -1,7 +1,7 @@
 use std::sync::RwLock;
 
 pub struct Channel<'chan, ST, RT> {
-    pub(crate) receivers: RwLock<Vec<&'chan mut dyn FnMut(ST, Option<RT>) -> Option<RT>>>,
+    pub(crate) receivers: RwLock<Vec<&'chan mut (dyn FnMut(ST, Option<RT>) -> Option<RT> + Send + Sync)>>,
     pub(crate) result: RwLock<Option<RT>>
 }
 
@@ -17,7 +17,7 @@ where
         }
     }
 
-    pub fn recieve(&self, receiver: &'chan mut dyn FnMut(Sender, Option<Recv>) -> Option<Recv>) {
+    pub fn recieve(&self, receiver: &'chan mut (dyn FnMut(Sender, Option<Recv>) -> Option<Recv> + Send + Sync)) {
         let mut receivers = self.receivers.write().unwrap();
         receivers.push(receiver);
         drop(receivers);
