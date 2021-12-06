@@ -32,7 +32,7 @@ let mut listener = |event, _current| {
     }
 };
 
-channel.recieve(&mut listener);
+channel.receive(&mut listener);
 
 // lets emit 12 times
 for _ in 0..12 {

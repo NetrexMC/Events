@@ -33,7 +33,7 @@ pub fn test_threads() {
         }
     };
 
-    channel.recieve(&mut listener);
+    channel.receive(&mut listener);
 
     let a = Arc::new(channel);
 
