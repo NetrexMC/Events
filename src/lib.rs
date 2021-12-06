@@ -41,7 +41,7 @@ pub struct ChannelEmitResult<RT> {
     pub(crate) data: RwLock<Option<RT>>,
 }
 
-impl<receiver> ChannelEmitResult<Receiver>
+impl<Receiver> ChannelEmitResult<Receiver>
 where
     Receiver: Send + Clone + Sized, {
     pub fn wait(&self) -> Option<Receiver> {
