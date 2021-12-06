@@ -17,7 +17,7 @@ where
         }
     }
 
-    pub fn recieve(&self, receiver: &'chan mut (dyn FnMut(Sender, Option<Recv>) -> Option<Recv> + Send + Sync)) {
+    pub fn receive(&self, receiver: &'chan mut (dyn FnMut(Sender, Option<Recv>) -> Option<Recv> + Send + Sync)) {
         let mut receivers = self.receivers.write().unwrap();
         receivers.push(receiver);
         drop(receivers);
@@ -41,10 +41,10 @@ pub struct ChannelEmitResult<RT> {
     pub(crate) data: RwLock<Option<RT>>,
 }
 
-impl<Reciever> ChannelEmitResult<Reciever>
+impl<receiver> ChannelEmitResult<Receiver>
 where
-    Reciever: Send + Clone + Sized, {
-    pub fn wait(&self) -> Option<Reciever> {
+    Receiver: Send + Clone + Sized, {
+    pub fn wait(&self) -> Option<Receiver> {
         loop {
             if *self.is_finished.read().unwrap() == true {
                 break;

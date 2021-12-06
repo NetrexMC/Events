@@ -31,7 +31,7 @@ pub fn test_generic() {
         }
     };
 
-    channel.recieve(&mut listener);
+    channel.receive(&mut listener);
 
     // lets emit 12 times
     for _ in 0..12 {
